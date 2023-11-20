@@ -1,12 +1,17 @@
 <script lang="ts">
+    import { usersStore } from '$lib/store'; // Import the users store
     import type { User } from '$lib/user';
     import { Heading, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
     import { CloseCircleSolid } from 'flowbite-svelte-icons';
 
-    let users: User[] = [];
+    // Reactive subscription to the users store
+    $: users = $usersStore;
 
-    function deleteClickHandler() {
-        console.log("Delete button clicked");
+    function deleteClickHandler(userToDelete: User) {
+        // Logic to delete the user from the store
+        usersStore.update(currentUsers => {
+            return currentUsers.filter(user => user.username !== userToDelete.username);
+        });
     }
 </script>
 
@@ -17,32 +22,19 @@
             <TableHeadCell>Username</TableHeadCell>
             <TableHeadCell>First Name</TableHeadCell>
             <TableHeadCell>Last Name</TableHeadCell>
+            <TableHeadCell>Action</TableHeadCell>
         </TableHead>
         <TableBody>
-            <TableBodyRow>
-                <TableBodyCell>jsmith</TableBodyCell>
-                <TableBodyCell>John</TableBodyCell>     
-                <TableBodyCell>Smith</TableBodyCell>
-                <TableBodyCell><CloseCircleSolid on:click={deleteClickHandler}></CloseCircleSolid></TableBodyCell>
-            </TableBodyRow>
-            <TableBodyRow>
-                <TableBodyCell>sbrown</TableBodyCell>
-                <TableBodyCell>Sarah</TableBodyCell>
-                <TableBodyCell>Brown</TableBodyCell>
-                <TableBodyCell><CloseCircleSolid on:click={deleteClickHandler}></CloseCircleSolid></TableBodyCell>
-            </TableBodyRow>
-            <TableBodyRow>
-                <TableBodyCell>dduck</TableBodyCell>
-                <TableBodyCell>Donald</TableBodyCell>     
-                <TableBodyCell>Duck</TableBodyCell>
-                <TableBodyCell><CloseCircleSolid on:click={deleteClickHandler}></CloseCircleSolid></TableBodyCell>
-            </TableBodyRow>
-            <TableBodyRow>
-                <TableBodyCell>mmouse</TableBodyCell>
-                <TableBodyCell>Minnie</TableBodyCell>     
-                <TableBodyCell>Mouse</TableBodyCell>
-                <TableBodyCell><CloseCircleSolid on:click={deleteClickHandler}></CloseCircleSolid></TableBodyCell>
-            </TableBodyRow>
+            {#each users as user (user.username)}
+                <TableBodyRow>
+                    <TableBodyCell>{user.username}</TableBodyCell>
+                    <TableBodyCell>{user.firstName}</TableBodyCell>     
+                    <TableBodyCell>{user.lastName}</TableBodyCell>
+                    <TableBodyCell>
+                        <CloseCircleSolid on:click={() => deleteClickHandler(user)}></CloseCircleSolid>
+                    </TableBodyCell>
+                </TableBodyRow>
+            {/each}
         </TableBody>
     </Table>
 </div>

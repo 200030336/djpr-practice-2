@@ -4,17 +4,18 @@
     import type { User } from "$lib/user";
     import type { Product } from "$lib/product";
     import Info from "./Info.svelte";
+    import { usersStore, productsStore } from "$lib/store";
 
-    let users: User[] = [];
-    let products: Product[] = [];
+
+
 </script>
 <div class="flex flex-col items-center">
     <Heading class="text-center">Practice Exercise 2</Heading>
     <br>
     <div class="flex flex-col w-10/12 items-center border-solid border-2 p-2">
-        <InputComponent/>
+        <InputComponent {usersStore} {productsStore}/>
     </div>
     <div class="flex flex-col w-10/12 items-center border-solid border-2 p-2">
-        <Info />
+        <Info {usersStore} {productsStore}/>
     </div>
 </div>
